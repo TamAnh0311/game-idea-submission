@@ -23,7 +23,7 @@
           >{{ props.data.upvotes.length }}
         </span>
       </div>
-      <div class="downvote-btn" :class="{ warning: isDownvoted }">
+      <div class="downvote-btn" :class="{ error: isDownvoted }">
         <v-btn
           :prepend-icon="
             isDownvoted ? 'mdi-arrow-down-bold' : 'mdi-arrow-down-bold-outline'
@@ -32,7 +32,7 @@
         >
           Downvote
         </v-btn>
-        <span class="text-caption font-weight-thin warning"
+        <span class="text-caption font-weight-thin error"
           >{{ props.data.downvotes.length }}
         </span>
       </div>
@@ -96,14 +96,14 @@ const downvote = () => {
 }
 
 .downvote-btn:hover {
-  color: rgb(var(--v-theme-warning));
+  color: rgb(var(--v-theme-error));
 }
 
 .success {
   color: rgb(var(--v-theme-success));
 }
 
-.warning {
-  color: rgb(var(--v-theme-warning));
+.error {
+  color: rgb(var(--v-theme-error));
 }
 </style>
