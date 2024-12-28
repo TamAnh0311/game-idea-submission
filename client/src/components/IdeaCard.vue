@@ -1,7 +1,12 @@
 <template>
   <v-card :color="props.color" :variant="props.variant" class="mx-auto">
+    <v-img
+      height="200px"
+      src="https://funfactco.com/cdn/shop/articles/fun-facts-about-video-games.jpg?v=1699969164&width=2000"
+      cover
+    ></v-img>
     <v-card-item>
-      <div>
+      <div class="mt-4">
         <div class="text-h6 mb-1">{{ props.data.title }}</div>
         <div class="text-caption">
           {{ props.data.description }}
@@ -9,7 +14,7 @@
       </div>
     </v-card-item>
 
-    <v-card-actions>
+    <v-card-actions class="d-flex justify-end">
       <div class="upvote-btn" :class="{ success: isUpvoted }">
         <v-btn
           :prepend-icon="

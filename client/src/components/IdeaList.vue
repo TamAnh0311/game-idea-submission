@@ -1,6 +1,6 @@
 <template>
   <v-container class="fill-height">
-    <v-responsive class="align-top fill-height mx-auto" max-width="900">
+    <v-responsive class="align-top fill-height mx-auto">
       <v-text-field
         single-line
         hide-details
@@ -14,18 +14,25 @@
         @click:append-inner="clearSearchStr"
       ></v-text-field>
 
-      <v-data-iterator :items="items">
-        <template v-slot:default="{ items }">
-          <template v-for="item in items" :key="item.id">
-            <idea-card
-              class="mt-2"
-              :data="item.raw"
-              @upvote="upvote"
-              @downvote="downvote"
-            />
+      <div v-if="items.length">
+        <v-data-iterator :items="items">
+          <template v-slot:default="{ items }">
+            <template v-for="item in items" :key="item.id">
+              <idea-card
+                class="mt-4"
+                :data="item.raw"
+                @upvote="upvote"
+                @downvote="downvote"
+              />
+            </template>
           </template>
-        </template>
-      </v-data-iterator>
+        </v-data-iterator>
+      </div>
+      <div v-else>
+        <p class="text-center text-h6">
+          No idea found! Why don't you take that idea ?
+        </p>
+      </div>
     </v-responsive>
   </v-container>
 </template>
@@ -33,7 +40,7 @@
 <script setup>
 import { STORE_KEY } from "@/constant";
 import { useEventsBus } from "@/plugins/useEventBus";
-import { onBeforeMount, onBeforeUnmount, ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import mockData from "@/mock-data";
 
 const originalData = ref([]);

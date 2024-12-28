@@ -53,7 +53,7 @@ const appStore = useAppStore();
 onBeforeMount(() => {
   let currentUser = sessionStorage.getItem(USER_ID_KEY);
   if (!currentUser) {
-    currentUser = generateId(USER_ID_KEY);
+    currentUser = generateId();
     sessionStorage.setItem(USER_ID_KEY, JSON.stringify(currentUser));
   }
   userID.value = currentUser;
