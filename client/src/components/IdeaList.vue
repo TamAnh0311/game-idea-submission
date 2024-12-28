@@ -39,7 +39,7 @@ import mockData from "@/mock-data";
 const originalData = ref([]);
 const items = ref([]);
 
-onBeforeMount(() => {
+const refreshData = () => {
   const ideaList = localStorage.getItem(STORE_KEY);
 
   if (ideaList) {
@@ -49,11 +49,15 @@ onBeforeMount(() => {
   }
 
   items.value = [...originalData.value];
+};
+
+onBeforeMount(() => {
+  refreshData();
 });
 
 const searchStr = ref("");
 
-const refreshData = () => {
+const filterData = () => {
   if (!searchStr.value) {
     items.value = [...originalData.value];
     return;
@@ -68,7 +72,7 @@ let debounceTimeout = null;
 const onInputChange = () => {
   clearTimeout(debounceTimeout);
   debounceTimeout = setTimeout(() => {
-    refreshData();
+    filterData();
   }, 200);
 };
 
@@ -77,7 +81,7 @@ const clearSearchStr = () => {
     return;
   }
   searchStr.value = "";
-  refreshData();
+  filterData();
 };
 
 const toggleValue = (payload, mode) => {
