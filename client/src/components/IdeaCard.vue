@@ -15,7 +15,6 @@
           :prepend-icon="
             isUpvoted ? 'mdi-arrow-up-bold' : 'mdi-arrow-up-bold-outline'
           "
-          variant="plain"
           @click="upvote"
         >
           Upvote
@@ -29,7 +28,6 @@
           :prepend-icon="
             isDownvoted ? 'mdi-arrow-down-bold' : 'mdi-arrow-down-bold-outline'
           "
-          variant="plain"
           @click="downvote"
         >
           Downvote
@@ -64,17 +62,19 @@ const props = defineProps({
 const appStore = useAppStore();
 const emit = defineEmits(["upvote", "downvote"]);
 
+const { upvotes, downvotes, id } = props.data;
+
 const isUpvoted = computed(() => {
-  return !!props.data.upvotes.includes(appStore.userID);
+  return !!upvotes.includes(appStore.userID);
 });
 
 const isDownvoted = computed(() => {
-  return !!props.data.downvotes.includes(appStore.userID);
+  return !!downvotes.includes(appStore.userID);
 });
 
 const upvote = () => {
   const payload = {
-    id: props.data.id,
+    id: id,
     userID: appStore.userID,
   };
 
@@ -83,7 +83,7 @@ const upvote = () => {
 
 const downvote = () => {
   const payload = {
-    id: props.data.id,
+    id: id,
     userID: appStore.userID,
   };
   emit("downvote", payload);
