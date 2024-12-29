@@ -18,9 +18,9 @@
       <v-expansion-panels class="mb-4">
         <v-expansion-panel title="Filters">
           <v-expansion-panel-text>
-            <div class="my-3 px-4 d-flex justify-space-between align-center">
+            <div class="d-flex justify-space-between align-center">
               <div class="w-66">
-                <span class="mb-2">Genres</span>
+                <span class="mb-4">Genres</span>
 
                 <v-select
                   :items="genres"
@@ -32,8 +32,8 @@
                 />
               </div>
               <div class="w-25">
-                <span class="mb-2">Sort By</span>
-                <v-select :items="sorts" multiple clearable density="compact" />
+                <span class="mb-4">Sort By</span>
+                <v-select :items="sorts" clearable density="compact" />
               </div>
             </div>
           </v-expansion-panel-text>
