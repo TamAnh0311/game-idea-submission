@@ -1,10 +1,6 @@
 <template>
   <v-card :color="props.color" :variant="props.variant" class="mx-auto">
-    <v-img
-      height="200px"
-      src="https://funfactco.com/cdn/shop/articles/fun-facts-about-video-games.jpg?v=1699969164&width=2000"
-      cover
-    ></v-img>
+    <v-img height="200px" :src="props.data.coverImg" cover></v-img>
     <v-card-item>
       <div class="mt-4">
         <div class="text-h6 mb-1">{{ props.data.title }}</div>
@@ -14,33 +10,56 @@
       </div>
     </v-card-item>
 
+    <v-divider inset></v-divider>
+
     <v-card-actions class="d-flex justify-end">
-      <div class="upvote-btn" :class="{ success: isUpvoted }">
-        <v-btn
-          :prepend-icon="
-            isUpvoted ? 'mdi-arrow-up-bold' : 'mdi-arrow-up-bold-outline'
-          "
-          @click="upvote"
+      <v-list-item class="w-100">
+        <template v-slot:prepend>
+          <v-avatar
+            color="grey-darken-3"
+            image="https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light"
+          ></v-avatar>
+        </template>
+
+        <v-list-item-title
+          >Create by: {{ props.data.created_by }}</v-list-item-title
         >
-          Upvote
-        </v-btn>
-        <span class="text-caption font-weight-thin success"
-          >{{ props.data.upvotes.length }}
-        </span>
-      </div>
-      <div class="downvote-btn" :class="{ error: isDownvoted }">
-        <v-btn
-          :prepend-icon="
-            isDownvoted ? 'mdi-arrow-down-bold' : 'mdi-arrow-down-bold-outline'
-          "
-          @click="downvote"
-        >
-          Downvote
-        </v-btn>
-        <span class="text-caption font-weight-thin error"
-          >{{ props.data.downvotes.length }}
-        </span>
-      </div>
+
+        <v-list-item-subtitle>Create at: {{ createAt }}</v-list-item-subtitle>
+
+        <template v-slot:append>
+          <div class="d-flex justify-self-end">
+            <div class="upvote-btn" :class="{ success: isUpvoted }">
+              <v-btn
+                :prepend-icon="
+                  isUpvoted ? 'mdi-arrow-up-bold' : 'mdi-arrow-up-bold-outline'
+                "
+                @click="upvote"
+              >
+                Upvote
+              </v-btn>
+              <span class="text-caption font-weight-thin success"
+                >{{ props.data.upvotes.length }}
+              </span>
+            </div>
+            <div class="downvote-btn" :class="{ error: isDownvoted }">
+              <v-btn
+                :prepend-icon="
+                  isDownvoted
+                    ? 'mdi-arrow-down-bold'
+                    : 'mdi-arrow-down-bold-outline'
+                "
+                @click="downvote"
+              >
+                Downvote
+              </v-btn>
+              <span class="text-caption font-weight-thin error"
+                >{{ props.data.downvotes.length }}
+              </span>
+            </div>
+          </div>
+        </template>
+      </v-list-item>
     </v-card-actions>
   </v-card>
 </template>
@@ -62,6 +81,13 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+});
+
+const createAt = computed(() => {
+  const date = new Date(props.data.created_at);
+  return `${date.getHours()}:${date.getMinutes()} ${date.getDate()}-${
+    date.getMonth() + 1
+  }-${date.getFullYear()}`;
 });
 
 const appStore = useAppStore();

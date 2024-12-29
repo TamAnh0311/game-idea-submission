@@ -20,25 +20,32 @@
           <v-expansion-panel-text>
             <div class="d-flex justify-space-between align-center">
               <div class="w-66">
-                <span class="mb-4">Genres</span>
-
-                <v-select
-                  :items="genres"
-                  chips
-                  multiple
-                  clearable
-                  closable-chips
-                  density="compact"
-                />
+                <genre-selection @update="handleGenreFilter" />
               </div>
               <div class="w-25">
                 <span class="mb-4">Sort By</span>
-                <v-select :items="sorts" clearable density="compact" />
+                <v-select
+                  :items="sorts"
+                  clearable
+                  density="compact"
+                  v-model="selecteSorts"
+                  @update:model-value="handleSortFilter"
+                />
               </div>
             </div>
           </v-expansion-panel-text>
         </v-expansion-panel>
       </v-expansion-panels>
+
+      <div class="mb-6">
+        <v-alert
+          v-if="showAlert"
+          closable
+          text="This is mock data for the initial load. Please provide some ideas for using the app"
+          type="info"
+          variant="tonal"
+        ></v-alert>
+      </div>
 
       <div v-if="items.length">
         <p class="text-h6">Idea List</p>
@@ -65,28 +72,24 @@
 </template>
 
 <script setup>
-import { STORE_KEY } from "@/constant";
+import { STORE_KEY, SORTS } from "@/constant";
 import { useEventsBus } from "@/plugins/useEventBus";
 import { onBeforeMount, ref } from "vue";
 import mockData from "@/mock-data";
 
-const genres = ref([
-  "action-adventure",
-  "puzzle",
-  "casino",
-  "shooter",
-  "turn-based",
-]);
-
-const sorts = ref(["Upvote", "Downvote", "Latest", "Oldest"]);
+const sorts = ref(SORTS);
+const selecteSorts = ref([]);
 
 const originalData = ref([]);
 const items = ref([]);
+
+const showAlert = ref(true);
 
 const refreshData = () => {
   const ideaList = localStorage.getItem(STORE_KEY);
 
   if (ideaList) {
+    showAlert.value = false;
     originalData.value = JSON.parse(ideaList);
   } else {
     originalData.value = [...mockData];
@@ -153,6 +156,33 @@ const upvote = (payload) => {
 
 const downvote = (payload) => {
   toggleValue(payload, "downvotes");
+};
+
+const handleGenreFilter = (data) => {
+  if (!data.value.length) {
+    items.value = [...originalData.value];
+    return;
+  }
+
+  items.value = originalData.value.filter((item) => {
+    return data.value.some((selected) =>
+      item.genres.includes(selected.toLowerCase())
+    );
+  });
+};
+
+const handleSortFilter = () => {
+  const sortOptions = {
+    Upvote: (item1, item2) => item2.upvotes.length - item1.upvotes.length,
+    Downvote: (item1, item2) => item2.downvotes.length - item1.downvotes.length,
+    Latest: (item1, item2) =>
+      new Date(item2.created_at) - new Date(item1.created_at),
+    Oldest: (item1, item2) =>
+      new Date(item1.created_at) - new Date(item2.created_at),
+  };
+
+  const sortFunction = sortOptions[selecteSorts.value] || (() => 0);
+  items.value = [...originalData.value].sort(sortFunction);
 };
 
 useEventsBus().on("refreshData", () => {
