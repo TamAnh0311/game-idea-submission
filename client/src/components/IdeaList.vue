@@ -1,7 +1,9 @@
 <template>
   <v-container class="fill-height">
     <v-responsive class="align-top fill-height mx-auto">
+      <p class="text-h5">Search Idea</p>
       <v-text-field
+        v-model="searchStr"
         single-line
         hide-details
         variant="solo"
@@ -9,14 +11,39 @@
         append-inner-icon="mdi-close"
         placeholder="Search by title"
         class="my-5"
-        v-model="searchStr"
         @input="onInputChange"
         @click:append-inner="clearSearchStr"
-      ></v-text-field>
+      />
+
+      <v-expansion-panels class="mb-4">
+        <v-expansion-panel title="Filters">
+          <v-expansion-panel-text>
+            <div class="my-3 px-4 d-flex justify-space-between align-center">
+              <div class="w-66">
+                <span class="mb-2">Genres</span>
+
+                <v-select
+                  :items="genres"
+                  chips
+                  multiple
+                  clearable
+                  closable-chips
+                  density="compact"
+                />
+              </div>
+              <div class="w-25">
+                <span class="mb-2">Sort By</span>
+                <v-select :items="sorts" multiple clearable density="compact" />
+              </div>
+            </div>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+      </v-expansion-panels>
 
       <div v-if="items.length">
+        <p class="text-h6">Idea List</p>
         <v-data-iterator :items="items">
-          <template v-slot:default="{ items }">
+          <template #default="{ items }">
             <template v-for="item in items" :key="item.id">
               <idea-card
                 class="mt-4"
@@ -42,6 +69,16 @@ import { STORE_KEY } from "@/constant";
 import { useEventsBus } from "@/plugins/useEventBus";
 import { onBeforeMount, ref } from "vue";
 import mockData from "@/mock-data";
+
+const genres = ref([
+  "action-adventure",
+  "puzzle",
+  "casino",
+  "shooter",
+  "turn-based",
+]);
+
+const sorts = ref(["Upvote", "Downvote", "Latest", "Oldest"]);
 
 const originalData = ref([]);
 const items = ref([]);
