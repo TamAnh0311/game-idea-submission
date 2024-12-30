@@ -54,7 +54,7 @@
           <v-btn
             text="Close Dialog"
             color="secondary"
-            @click="closeDialog(isActive)"
+            @click="isActive.value = false"
           ></v-btn>
         </v-card-actions>
       </v-card>
@@ -100,6 +100,7 @@ const handleCoverSelection = (selectedTheme) => {
 };
 
 const appStore = useAppStore();
+
 const submit = (isActive) => {
   if (!idea.value.title.length || !idea.value.description.length) {
     alert("Cannot submit idea without title or description");
@@ -122,16 +123,15 @@ const submit = (isActive) => {
   currentIdeas.push(newIdea);
   localStorage.setItem(STORE_KEY, JSON.stringify(currentIdeas));
 
-  closeDialog(isActive);
-  useEventsBus().emit("refreshData");
-};
-
-const closeDialog = (isActive) => {
   idea.value = {
     title: "",
     description: "",
     genres: [],
   };
+
+  useEventsBus().emit("refreshData");
   isActive.value = false;
 };
+
+
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <v-container class="fill-height">
+  <v-container class="fill-height list-sizing">
     <v-responsive class="align-top fill-height mx-auto">
       <p class="text-h5">Search Idea</p>
       <v-text-field
@@ -49,18 +49,19 @@
 
       <div v-if="items.length">
         <p class="text-h6">Idea List</p>
-        <v-data-iterator :items="items">
-          <template #default="{ items }">
-            <template v-for="item in items" :key="item.id">
-              <idea-card
-                class="mt-4"
-                :data="item.raw"
-                @upvote="upvote"
-                @downvote="downvote"
-              />
-            </template>
-          </template>
-        </v-data-iterator>
+
+        <div
+          v-for="item in items"
+          :key="item.id"
+        >
+          <idea-card
+            class="mt-4"
+            :data="item"
+            @upvote="upvote"
+            @downvote="downvote"
+          />
+        </div>
+        
       </div>
       <div v-else>
         <p class="text-center text-h6">
@@ -134,6 +135,10 @@ const clearSearchStr = () => {
 const toggleValue = (payload, mode) => {
   const { id, userID } = payload;
 
+  console.log('id', id);
+  console.log('value', items.value);
+  
+  
   const item = items.value.find((item) => item.id === id);
 
   if (item) {
@@ -145,7 +150,6 @@ const toggleValue = (payload, mode) => {
       item[mode].push(userID);
     }
 
-    // TODO: should update once page unmount
     localStorage.setItem(STORE_KEY, JSON.stringify(items.value));
   }
 };
@@ -187,5 +191,18 @@ const handleSortFilter = () => {
 
 useEventsBus().on("refreshData", () => {
   refreshData();
+  
 });
 </script>
+
+<style>
+.list-sizing {
+  max-width: 50%;
+}
+
+@media only screen and (max-width: 1280px) {
+  .list-sizing {
+    max-width: 90%;
+  }
+}
+</style>

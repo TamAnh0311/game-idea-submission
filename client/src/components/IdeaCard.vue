@@ -10,7 +10,21 @@
       </div>
     </v-card-item>
 
-    <v-divider inset></v-divider>
+    <v-divider inset />
+
+    <div class="pa-3">
+      <v-chip
+        v-for="genre in props.data.genres"
+        :key="genre"
+        variant="outlined" 
+        class="mr-2"
+      >
+        {{ genre }}
+      </v-chip>
+    </div>
+
+
+    <v-divider inset />
 
     <v-card-actions class="d-flex justify-end">
       <v-list-item class="w-100">
